@@ -1,0 +1,96 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #14151b;
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 24px;
+}
+
+canvas {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 2px solid #4d5163;
+    outline: 1px solid rgba(255, 255, 255, 0.06);
+    outline-offset: 4px;
+    box-shadow:
+            0 0 0 1px rgba(255, 255, 255, 0.03),
+            0 12px 32px rgba(0, 0, 0, 0.45);
+    display: block;
+}
+
+.controls {
+    display: flex;
+    gap: 24px;
+    background: #22242e;
+    padding: 14px 22px;
+    border-radius: 12px;
+    border: 1px solid #34364280;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-group:not(:last-child) {
+    padding-right: 24px;
+    border-right: 1px solid #3a3d4a;
+}
+
+.control-label {
+    color: #7d7f8c;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.ctrl-btn {
+    width: 42px;
+    height: 42px;
+    border: 1px solid #454858;
+    border-radius: 8px;
+    background: #2f3140;
+    color: #e8e8ef;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+}
+
+.ctrl-btn:hover {
+    background: #3d4055;
+    border-color: #6366f1;
+}
+
+.ctrl-btn:active {
+    background: #6366f1;
+    border-color: #6366f1;
+    transform: scale(0.92);
+}
