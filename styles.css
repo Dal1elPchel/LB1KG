@@ -34,7 +34,9 @@ canvas {
 
 .controls {
     display: flex;
-    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px 24px;
     background: #22242e;
     padding: 14px 22px;
     border-radius: 12px;

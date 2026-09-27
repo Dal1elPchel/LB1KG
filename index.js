@@ -40,8 +40,9 @@ const boneNumbers = [
     [40, 44], [51, 43], [43, 41],
     [42, 40], [41, 47],
 ];
+const bonesUnder = boneNumbers.map(([a, b]) => [a - 1, b - 1]);
 
-const points = [
+const pointsUnder = [
     {X: 40, Y: 144},   // 1
     {X: 64, Y: 120},   // 2
     {X: 64, Y: 40},    // 3
@@ -98,9 +99,36 @@ const points = [
     {X: 8, Y: -32},   // 54
     {X: 8, Y: -40},   // 55
 ];
+pointsUnder.forEach(p => { p.Z = 30; });
+const OUTLINE_COUNT = 33;
 
-const bones = boneNumbers.map(([a, b]) => [a - 1, b - 1]);
+pointsUnder.forEach(p => { p.Z = 30; });
 
+const offset = pointsUnder.length; // 55
+
+const bonesBackShifted = bonesUnder
+    .filter(([a, b]) => a < OUTLINE_COUNT && b < OUTLINE_COUNT)
+    .map(([a, b]) => [a + offset, b + offset]);
+
+const pointsBack = structuredClone(pointsUnder.slice(0, OUTLINE_COUNT));
+pointsBack.forEach(p => { p.Z = -30; });
+
+const bonesBridge = pointsUnder
+    .slice(0, OUTLINE_COUNT)
+    .map((_, i) => [i, i + offset]);
+
+const points = pointsUnder.concat(pointsBack);
+
+const boneGroups = {
+    front: bonesUnder,        // весь силуэт + глаза + нашивка (передняя грань)
+    back: bonesBackShifted,   // только силуэт сзади
+    bridge: bonesBridge,      // перемычки — рисуем всегда
+};
+
+const frontIndices = points.map((_, i) => i).filter(i => i < offset);
+const backIndices = points.map((_, i) => i).filter(i => i >= offset);
+
+const sideIndices = {frontIndices, backIndices};
 
 const canvas = document.getElementById("game");
 
@@ -109,7 +137,7 @@ const SCALE = 3;
 
 ctx.scale(SCALE, SCALE);
 
-const drawer = new Drawer(canvas, ctx, SCALE, points, bones);
+const drawer = new Drawer(canvas, ctx, SCALE, points, boneGroups, sideIndices);
 
 drawer.draw();
 
@@ -119,7 +147,7 @@ document.getElementById("zoomOut").addEventListener("click", () => drawer.zoomOu
 
 const ROTATE_SPEED = Math.PI / 1.5;
 
-let rotationDirection = 0;
+let activeRotation = null;
 let lastTimestamp = null;
 let rafId = null;
 
@@ -128,15 +156,15 @@ function rotationLoop(timestamp) {
     const dt = (timestamp - lastTimestamp) / 1000;
     lastTimestamp = timestamp;
 
-    if (rotationDirection !== 0) {
-        drawer.rotateBy(rotationDirection * ROTATE_SPEED * dt);
+    if (activeRotation) {
+        drawer.rotateBy(activeRotation.axis, activeRotation.direction * ROTATE_SPEED * dt);
     }
 
     rafId = requestAnimationFrame(rotationLoop);
 }
 
-function startRotating(direction) {
-    rotationDirection = direction;
+function startRotating(axis, direction) {
+    activeRotation = {axis, direction};
     if (rafId === null) {
         lastTimestamp = null;
         rafId = requestAnimationFrame(rotationLoop);
@@ -144,26 +172,30 @@ function startRotating(direction) {
 }
 
 function stopRotating() {
-    rotationDirection = 0;
+    activeRotation = null;
     if (rafId !== null) {
         cancelAnimationFrame(rafId);
         rafId = null;
     }
 }
 
-function bindHoldRotation(buttonId, direction) {
+function bindHoldRotation(buttonId, axis, direction) {
     const button = document.getElementById(buttonId);
 
-    button.addEventListener("mousedown", () => startRotating(direction));
+    button.addEventListener("mousedown", () => startRotating(axis, direction));
     button.addEventListener("touchstart", (e) => {
         e.preventDefault();
-        startRotating(direction);
+        startRotating(axis, direction);
     }, {passive: false});
 
 }
 
-bindHoldRotation("rotateLeft", 1);
-bindHoldRotation("rotateRight", -1);
+bindHoldRotation("rotateYLeft", 'Y', 1);
+bindHoldRotation("rotateYRight", 'Y', -1);
+bindHoldRotation("rotateXUp", 'X', 1);
+bindHoldRotation("rotateXDown", 'X', -1);
+bindHoldRotation("rotateZLeft", 'Z', 1);
+bindHoldRotation("rotateZRight", 'Z', -1);
 
 window.addEventListener("mouseup", stopRotating);
 window.addEventListener("touchend", stopRotating);
