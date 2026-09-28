@@ -41,7 +41,8 @@ export class Camera {
         const rotated = this.rotatePoint(point);
         return {
             X: (rotated.X * this.zoom + this.canvas.width / this.SCALE) / 2,
-            Y: (this.canvas.height / this.SCALE - rotated.Y * this.zoom) / 2
+            Y: (this.canvas.height / this.SCALE - rotated.Y * this.zoom) / 2,
+            Z: rotated.Z
         };
     }
 

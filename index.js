@@ -49,27 +49,27 @@ const pointsUnder = [
     {X: 40, Y: 16},    // 4
     {X: 24, Y: 16},    // 5
     {X: 24, Y: -8},    // 6
-    {X: 80, Y: -8},   // 7
-    {X: 80, Y: -88},  // 8
-    {X: 56, Y: -88},  // 9
-    {X: 56, Y: -32},  // 10
+    {X: 80, Y: -8},    // 7
+    {X: 80, Y: -88},   // 8
+    {X: 56, Y: -88},   // 9
+    {X: 56, Y: -32},   // 10
     {X: 32, Y: -56},   // 11
     {X: 32, Y: -136},  // 12
     {X: 32, Y: -144},  // 13
-    {X: 8, Y: -144},  // 14
-    {X: 8, Y: -136},  // 15
-    {X: 8, Y: -80},   // 16
-    {X: 0, Y: -88},   // 17
-    {X: -8, Y: -80},  // 18
-    {X: -8, Y: -136}, // 19
-    {X: -8, Y: -144}, // 20
+    {X: 8, Y: -144},   // 14
+    {X: 8, Y: -136},   // 15
+    {X: 8, Y: -80},    // 16
+    {X: 0, Y: -88},    // 17
+    {X: -8, Y: -80},   // 18
+    {X: -8, Y: -136},  // 19
+    {X: -8, Y: -144},  // 20
     {X: -32, Y: -144}, // 21
     {X: -32, Y: -136}, // 22
     {X: -32, Y: -56},  // 23
-    {X: -56, Y: -32}, // 24
-    {X: -56, Y: -88}, // 25
-    {X: -80, Y: -88}, // 26
-    {X: -80, Y: -8},  // 27
+    {X: -56, Y: -32},  // 24
+    {X: -56, Y: -88},  // 25
+    {X: -80, Y: -88},  // 26
+    {X: -80, Y: -8},   // 27
     {X: -24, Y: -8},   // 28
     {X: -24, Y: 16},   // 29
     {X: -40, Y: 16},   // 30
@@ -77,15 +77,15 @@ const pointsUnder = [
     {X: -64, Y: 120},  // 32
     {X: -40, Y: 144},  // 33
     {X: -56, Y: 120},  // 34
-    {X: -8, Y: 120},  // 35
-    {X: -8, Y: 72},   // 36
-    {X: 8, Y: 120},   // 37
-    {X: 8, Y: 72},    // 38
+    {X: -8, Y: 120},   // 35
+    {X: -8, Y: 72},    // 36
+    {X: 8, Y: 120},    // 37
+    {X: 8, Y: 72},     // 38
     {X: 56, Y: 120},   // 39
-    {X: 8, Y: -24},   // 40
-    {X: 8, Y: -48},   // 41
-    {X: -8, Y: -24},  // 42
-    {X: -8, Y: -48},  // 43
+    {X: 8, Y: -24},    // 40
+    {X: 8, Y: -48},    // 41
+    {X: -8, Y: -24},   // 42
+    {X: -8, Y: -48},   // 43
     {X: 16, Y: -24},   // 44
     {X: 16, Y: -32},   // 45
     {X: 16, Y: -40},   // 46
@@ -94,50 +94,59 @@ const pointsUnder = [
     {X: -16, Y: -32},  // 49
     {X: -16, Y: -40},  // 50
     {X: -16, Y: -48},  // 51
-    {X: -8, Y: -32},  // 52
-    {X: -8, Y: -40},  // 53
-    {X: 8, Y: -32},   // 54
-    {X: 8, Y: -40},   // 55
+    {X: -8, Y: -32},   // 52
+    {X: -8, Y: -40},   // 53
+    {X: 8, Y: -32},    // 54
+    {X: 8, Y: -40},    // 55
 ];
-pointsUnder.forEach(p => { p.Z = 30; });
-const OUTLINE_COUNT = 33;
 
-pointsUnder.forEach(p => { p.Z = 30; });
+const N = 33;
+const DEPTH = 30;
+const offset = pointsUnder.length;
 
-const offset = pointsUnder.length; // 55
+pointsUnder.forEach(p => { p.Z = DEPTH; });
 
-const bonesBackShifted = bonesUnder
-    .filter(([a, b]) => a < OUTLINE_COUNT && b < OUTLINE_COUNT)
-    .map(([a, b]) => [a + offset, b + offset]);
-
-const pointsBack = structuredClone(pointsUnder.slice(0, OUTLINE_COUNT));
-pointsBack.forEach(p => { p.Z = -30; });
-
-const bonesBridge = pointsUnder
-    .slice(0, OUTLINE_COUNT)
-    .map((_, i) => [i, i + offset]);
+const pointsBack = structuredClone(pointsUnder.slice(0, N));
+pointsBack.forEach(p => { p.Z = -DEPTH; });
 
 const points = pointsUnder.concat(pointsBack);
 
-const boneGroups = {
-    front: bonesUnder,        // весь силуэт + глаза + нашивка (передняя грань)
-    back: bonesBackShifted,   // только силуэт сзади
-    bridge: bonesBridge,      // перемычки — рисуем всегда
+const bonesBackShifted = bonesUnder
+    .filter(([a, b]) => a < N && b < N)
+    .map(([a, b]) => [a + offset, b + offset]);
+
+let area = 0;
+for (let k = 0; k < N; k++) {
+    const p = pointsUnder[k];
+    const q = pointsUnder[(k + 1) % N];
+    area += p.X * q.Y - q.X * p.Y;
+}
+const sign = area > 0 ? 1 : -1;
+
+const walls = [];
+for (let k = 0; k < N; k++) {
+    const k2 = (k + 1) % N;
+    const ex = pointsUnder[k2].X - pointsUnder[k].X;
+    const ey = pointsUnder[k2].Y - pointsUnder[k].Y;
+    walls.push({
+        normal: {X: sign * ey, Y: -sign * ex, Z: 0},
+        vertices: [k, k2, k2 + offset, k + offset],
+    });
+}
+
+const outline = Array.from({length: N}, (_, i) => i);
+const caps = {
+    front: {vertices: outline, bones: bonesUnder},
+    back: {vertices: outline.map(i => i + offset), bones: bonesBackShifted},
 };
 
-const frontIndices = points.map((_, i) => i).filter(i => i < offset);
-const backIndices = points.map((_, i) => i).filter(i => i >= offset);
-
-const sideIndices = {frontIndices, backIndices};
-
 const canvas = document.getElementById("game");
-
 const ctx = canvas.getContext('2d');
 const SCALE = 3;
 
 ctx.scale(SCALE, SCALE);
 
-const drawer = new Drawer(canvas, ctx, SCALE, points, boneGroups, sideIndices);
+const drawer = new Drawer(canvas, ctx, SCALE, points, {caps, walls});
 
 drawer.draw();
 
@@ -187,7 +196,6 @@ function bindHoldRotation(buttonId, axis, direction) {
         e.preventDefault();
         startRotating(axis, direction);
     }, {passive: false});
-
 }
 
 bindHoldRotation("rotateYLeft", 'Y', 1);
