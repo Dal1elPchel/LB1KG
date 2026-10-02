@@ -1,7 +1,6 @@
 "use strict";
 
 import {Drawer} from "./scripts/Drawer.js";
-
 const boneNumbers = [
     // голова
     [33, 1], [1, 2], [2, 3], [3, 4], [4, 5],
@@ -104,7 +103,7 @@ const OUTLINE_COUNT = 33;
 
 pointsUnder.forEach(p => { p.Z = 30; });
 
-const offset = pointsUnder.length; // 55
+const offset = pointsUnder.length;
 
 const bonesBackShifted = bonesUnder
     .filter(([a, b]) => a < OUTLINE_COUNT && b < OUTLINE_COUNT)
@@ -118,17 +117,8 @@ const bonesBridge = pointsUnder
     .map((_, i) => [i, i + offset]);
 
 const points = pointsUnder.concat(pointsBack);
+const bones = bonesUnder.concat(bonesBackShifted, bonesBridge);
 
-const boneGroups = {
-    front: bonesUnder,        // весь силуэт + глаза + нашивка (передняя грань)
-    back: bonesBackShifted,   // только силуэт сзади
-    bridge: bonesBridge,      // перемычки — рисуем всегда
-};
-
-const frontIndices = points.map((_, i) => i).filter(i => i < offset);
-const backIndices = points.map((_, i) => i).filter(i => i >= offset);
-
-const sideIndices = {frontIndices, backIndices};
 
 const canvas = document.getElementById("game");
 
@@ -137,7 +127,7 @@ const SCALE = 3;
 
 ctx.scale(SCALE, SCALE);
 
-const drawer = new Drawer(canvas, ctx, SCALE, points, boneGroups, sideIndices);
+const drawer = new Drawer(canvas, ctx, SCALE, points, bones);
 
 drawer.draw();
 
