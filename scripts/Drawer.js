@@ -23,6 +23,10 @@ export class Drawer {
         if (this.camera.rotateBy(axis, deltaRadians)) this.draw();
     }
 
+    moveBy(dx, dy) {
+        if (this.camera.moveBy(dx, dy)) this.draw();
+    }
+
     draw() {
         this.renderer.clearRect();
         this.renderer.drawAxes();

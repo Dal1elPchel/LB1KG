@@ -18,8 +18,11 @@ export class Renderer {
         const origin = this.camera.worldToCanvas({ X: 0, Y: 0 });
         const arrowSize = 8;
 
-        this.drawArrowLine(0, origin.Y, this.canvas.width, origin.Y, arrowSize);
-        this.drawArrowLine(origin.X, this.canvas.height, origin.X, 0, arrowSize);
+        const w = this.canvas.width / this.camera.SCALE;
+        const h = this.canvas.height / this.camera.SCALE;
+
+        this.drawArrowLine(0, origin.Y, w, origin.Y, arrowSize);
+        this.drawArrowLine(origin.X, h, origin.X, 0, arrowSize);
         this.ctx.restore();
     }
 
