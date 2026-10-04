@@ -9,6 +9,7 @@ export class Camera {
         this.zoomStep = 0.2;
 
         this.rotation = {X: 0, Y: 0, Z: 0};
+        this.offset = {X: 0, Y: 0};
     }
 
     rotatePoint(point) {
@@ -40,9 +41,9 @@ export class Camera {
     worldToCanvas(point) {
         const rotated = this.rotatePoint(point);
         return {
-            X: (rotated.X * this.zoom + this.canvas.width / this.SCALE) / 2,
-            Y: (this.canvas.height / this.SCALE - rotated.Y * this.zoom) / 2,
-            Z: rotated.Z
+
+            X: (rotated.X * this.zoom + this.canvas.width / this.SCALE) / 2 + this.offset.X,
+            Y: (this.canvas.height / this.SCALE - rotated.Y * this.zoom) / 2 - this.offset.Y
         };
     }
 
@@ -65,6 +66,13 @@ export class Camera {
         if (deltaRadians === 0) return false;
         const TWO_PI = Math.PI * 2;
         this.rotation[axis] = (this.rotation[axis] + deltaRadians) % TWO_PI;
+        return true;
+    }
+
+    moveBy(dx, dy) {
+        if (dx === 0 && dy === 0) return false;
+        this.offset.X += dx;
+        this.offset.Y += dy;
         return true;
     }
 }
