@@ -110,9 +110,18 @@ export function buildModel() {
         .map(([a, b]) => [a + offset, b + offset]);
     const bonesBridge = back.map((_, i) => [i, i + offset]);
 
+    const outline = Array.from({length: OUTLINE_COUNT}, (_, i) => i);
+    const frontFace = outline;
+    const backFace = outline.map(i => i + offset);
+    const sideFaces = outline.map(i => {
+        const j = (i + 1) % OUTLINE_COUNT;
+        return [i, j, j + offset, i + offset];
+    });
+
     return {
         points: [...front, ...back],
         bones: [...bonesUnder, ...bonesBack, ...bonesBridge],
+        faces: [frontFace, backFace, ...sideFaces],
         focal: FOCAL,
     };
 }

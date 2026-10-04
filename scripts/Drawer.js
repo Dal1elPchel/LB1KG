@@ -3,9 +3,10 @@ import {Renderer} from "./Renderer.js";
 
 export class Drawer {
 
-    constructor(canvas, ctx, SCALE, points, bones, focal) {
+    constructor(canvas, ctx, SCALE, points, bones, faces, focal) {
         this.points = points;
         this.bones = bones;
+        this.faces = faces;
 
         this.camera = new Camera(canvas, SCALE, focal);
         this.renderer = new Renderer(canvas, ctx, this.camera);
@@ -37,6 +38,6 @@ export class Drawer {
         this.renderer.clearRect();
         this.renderer.drawAxes();
 
-        this.renderer.draw(this.points, this.bones);
+        this.renderer.draw(this.points, this.bones, this.faces);
     }
 }
