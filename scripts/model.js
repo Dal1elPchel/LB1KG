@@ -1,5 +1,6 @@
 const OUTLINE_COUNT = 33;
 const DEPTH = 30;
+const FOCAL = 600;
 
 const boneNumbers = [
     // голова
@@ -112,5 +113,6 @@ export function buildModel() {
     return {
         points: [...front, ...back],
         bones: [...bonesUnder, ...bonesBack, ...bonesBridge],
+        focal: FOCAL,
     };
 }

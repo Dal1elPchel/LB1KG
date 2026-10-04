@@ -1,5 +1,5 @@
 export class Camera {
-    constructor(canvas, scale) {
+    constructor(canvas, scale, focal) {
         this.canvas = canvas;
         this.SCALE = scale;
 
@@ -10,6 +10,13 @@ export class Camera {
 
         this.rotation = {X: 0, Y: 0, Z: 0};
         this.offset = {X: 0, Y: 0};
+
+        this.MIN_DISTANCE = 200;
+        this.focalLength = focal;
+    }
+
+    get distance() {
+        return Math.max(this.focalLength, this.MIN_DISTANCE);
     }
 
     rotatePoint(point) {
@@ -38,12 +45,27 @@ export class Camera {
         return {X: x, Y: y, Z: z};
     }
 
+    setFocal(value) {
+        if (value === this.focalLength) return false;
+        this.focalLength = value;
+        return true;
+    }
+
     worldToCanvas(point) {
         const rotated = this.rotatePoint(point);
-        return {
 
-            X: (rotated.X * this.zoom + this.canvas.width / this.SCALE) / 2 + this.offset.X,
-            Y: (this.canvas.height / this.SCALE - rotated.Y * this.zoom) / 2 - this.offset.Y
+        const x = rotated.X + this.offset.X;
+        const y = rotated.Y + this.offset.Y;
+
+        const depth = this.distance - rotated.Z;
+
+        const scale = this.zoom * this.focalLength / depth;
+
+
+        return {
+            X: (x * scale + this.canvas.width / this.SCALE) / 2,
+            Y: (this.canvas.height / this.SCALE - y * scale) / 2,
+            Z: rotated.Z
         };
     }
 

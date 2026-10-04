@@ -67,4 +67,14 @@ export function setupControls(drawer) {
     window.addEventListener("mouseup", stopHolding);
     window.addEventListener("touchend", stopHolding);
     window.addEventListener("touchcancel", stopHolding);
+
+    const focalSlider = document.getElementById("focalLength");
+    const focalValue = document.getElementById("focalLengthValue");
+
+    focalValue.textContent = focalSlider.value;
+    focalSlider.addEventListener("input", () => {
+        const value = Number(focalSlider.value);
+        focalValue.textContent = value;
+        drawer.setFocal(value);
+    });
 }

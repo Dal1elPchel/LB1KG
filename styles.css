@@ -96,3 +96,53 @@ canvas {
     border-color: #6366f1;
     transform: scale(0.92);
 }
+
+.slider-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 42px;
+}
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 160px;
+    height: 6px;
+    border-radius: 3px;
+    background: #454858;
+    outline: none;
+    cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #6366f1;
+    border: 2px solid #e8e8ef;
+    transition: transform 0.1s ease;
+}
+
+.slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #6366f1;
+    border: 2px solid #e8e8ef;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+}
+
+.slider-value {
+    min-width: 40px;
+    color: #e8e8ef;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}

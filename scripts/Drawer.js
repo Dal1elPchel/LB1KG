@@ -3,12 +3,16 @@ import {Renderer} from "./Renderer.js";
 
 export class Drawer {
 
-    constructor(canvas, ctx, SCALE, points, bones) {
+    constructor(canvas, ctx, SCALE, points, bones, focal) {
         this.points = points;
         this.bones = bones;
 
-        this.camera = new Camera(canvas, SCALE);
+        this.camera = new Camera(canvas, SCALE, focal);
         this.renderer = new Renderer(canvas, ctx, this.camera);
+    }
+
+    setFocal(value) {
+        if (this.camera.setFocal(value)) this.draw();
     }
 
     zoomIn()  {
