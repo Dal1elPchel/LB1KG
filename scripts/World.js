@@ -22,6 +22,8 @@ export class World {
     }
 
     resetCamera() {
+        this.camera.fov = 50;
+        this.camera.updateProjectionMatrix();
         this.camera.position.set(DEFAULT_CAM.x, DEFAULT_CAM.y, DEFAULT_CAM.z);
         this.controls.target.set(0, 0, 0);
         this.controls.update();
