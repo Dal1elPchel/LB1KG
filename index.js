@@ -21,15 +21,23 @@ const geometry = new THREE.ExtrudeGeometry(shape, {depth: DEPTH * 2, bevelEnable
 geometry.translate(0, 0, -DEPTH);
 
 const material = new THREE.MeshLambertMaterial({color: 0xa259ff});
+const HERO_SCALE = 1;               // пока 1, уменьшим на шаге 3, когда появится трасса
 
-scene.add(new THREE.Mesh(geometry, material));
+const hero = new THREE.Group();     // внешняя группа: ею мы будем двигать и поворачивать персонажа
+const body = new THREE.Group();     // внутренняя: тут лежат все части, и она отвечает за масштаб
+body.scale.setScalar(HERO_SCALE);
+hero.add(body);
+scene.add(hero);
+
+
+body.add(new THREE.Mesh(geometry, material));
 const eyeMaterial = new THREE.MeshLambertMaterial({color: 0xc6ff3d, side: THREE.DoubleSide});
 
 for (const triangle of eyes) {
     const eyeShape = new THREE.Shape(triangle.map(p => new THREE.Vector2(p.X, p.Y)));
     const eye = new THREE.Mesh(new THREE.ShapeGeometry(eyeShape), eyeMaterial);
     eye.position.z = DEPTH + 0.5;
-    scene.add(eye);
+    body.add(eye);
 }
 
 const patchShape = new THREE.Shape([
@@ -43,7 +51,7 @@ const patch = new THREE.Mesh(
     new THREE.MeshLambertMaterial({color: 0xff4fd8, side: THREE.DoubleSide})
 );
 patch.position.z = DEPTH + 0.5;
-scene.add(patch);
+body.add(patch);
 const linePoints = [];
 for (const [a, b] of patchBones) {
     linePoints.push(
@@ -56,7 +64,7 @@ const patchLines = new THREE.LineSegments(
     new THREE.LineBasicMaterial({color: 0x000000})
 );
 patchLines.position.z = DEPTH + 1;
-scene.add(patchLines);
+body.add(patchLines);
 
 scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 const sun = new THREE.DirectionalLight(0xffffff, 2.5);
