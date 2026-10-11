@@ -65,8 +65,9 @@ export class Hero {
         return lines;
     }
 
-    placeAt(position, tangent) {
+    placeAt(position, tangent, drift = 0) {
         this.group.position.set(position.x, FEET_OFFSET, position.z);
-        this.group.rotation.y = Math.atan2(tangent.x, tangent.z);
+        this.group.rotation.y = Math.atan2(tangent.x, tangent.z) + drift;
+        this.body.rotation.z = drift * 0.25;
     }
 }

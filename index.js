@@ -15,13 +15,9 @@ world.add(hero.group);
 world.add(lights.group);
 
 lights.bindButtons();
-const animation = new AnimationController(world, document.getElementById("animBtn"));
+const animation = new AnimationController(world, document.getElementById("animBtn"),  track, hero);
 
-const startPos = new THREE.Vector3();
-const startTan = new THREE.Vector3();
-track.pointAt(0, startPos);
-track.tangentAt(0, startTan);
-hero.placeAt(startPos, startTan);
+animation.resetHero();
 
 const clock = new THREE.Clock();
 
