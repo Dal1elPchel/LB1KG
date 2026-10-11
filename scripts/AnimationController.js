@@ -7,17 +7,19 @@ const MAX_DRIFT = 0.9;
 const DRIFT_SMOOTH = 6;
 const RISE = 0.35;   // секунд, за которые вспышка плавно нарастает перед склейкой
 const FALL = 0.20;
+const FADE_OUT = 0.8;
 
 const angleOf = (v) => Math.atan2(v.x, v.z);
 const wrapAngle = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 
 export class AnimationController {
-    constructor(world, button, track, hero, lights) {
+    constructor(world, button, track, hero, lights, music) {
         this.world = world;
         this.button = button;
         this.track = track;
         this.hero = hero;
         this.lights = lights;
+        this.music = music;
 
         this.totalDuration = SHOTS.reduce((sum, s) => sum + s.dur, 0);   // длина ролика
         this.speed = track.length / this.totalDuration;                  // за ролик ровно один круг
@@ -45,7 +47,7 @@ export class AnimationController {
         };
         this.tanAhead = new THREE.Vector3();
 
-        button.addEventListener("click", () => this.start());
+        button.addEventListener("click", () => (this.isRunning ? this.stop() : this.start()));
     }
 
     resetHero() {
@@ -121,16 +123,16 @@ export class AnimationController {
         this.resetHero();
         this.startShot(0);
         this.updateCamera();
+        this.music.play();
         this.world.controls.enabled = false;
-        this.button.disabled = true;
-        this.button.textContent = "Идёт...";
+        this.button.textContent = "Cтоп";
     }
 
     stop() {
         this.isRunning = false;
         this.world.controls.enabled = true;
-        this.button.disabled = false;
         this.button.textContent = "Анимация";
+        this.music.stop();
         this.applyFlash(0);
         this.world.resetCamera();
         this.resetHero();
@@ -152,5 +154,7 @@ export class AnimationController {
         }
         this.updateCamera();
         this.applyFlash(this.computeFlash());
+        const remaining = this.totalDuration - this.time;
+        this.music.setVolume(remaining < FADE_OUT ? remaining / FADE_OUT : 1);
     }
 }
