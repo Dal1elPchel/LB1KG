@@ -15,7 +15,7 @@ world.add(hero.group);
 world.add(lights.group);
 
 lights.bindButtons();
-const animation = new AnimationController(world, document.getElementById("animBtn"),  track, hero);
+const animation = new AnimationController(world, document.getElementById("animBtn"),  track, hero, lights);
 
 animation.resetHero();
 

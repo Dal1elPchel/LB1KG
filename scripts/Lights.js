@@ -2,12 +2,13 @@ import * as THREE from "three";
 
 const LIGHT_SPEED = 200;
 const LIGHT_LIMIT = 800;
+const SUN_BASE = 2.5;
+const AMBIENT_BASE = 0.5;
 
 export class Lights {
     constructor() {
-        this.ambient = new THREE.AmbientLight(0xffffff, 0.5);
-
-        this.sun = new THREE.DirectionalLight(0xffffff, 2.5);
+        this.ambient = new THREE.AmbientLight(0xffffff, AMBIENT_BASE);
+        this.sun = new THREE.DirectionalLight(0xffffff, SUN_BASE);
         this.sun.position.set(200, 300, 400);
 
         this.marker = new THREE.Mesh(
@@ -41,6 +42,11 @@ export class Lights {
         window.addEventListener("pointerup", stop);
         window.addEventListener("pointercancel", stop);
         window.addEventListener("blur", stop);
+    }
+
+    setFlash(f) {
+        this.sun.intensity = SUN_BASE + f * 8;
+        this.ambient.intensity = AMBIENT_BASE + f * 1.5;
     }
 
     update(dt) {

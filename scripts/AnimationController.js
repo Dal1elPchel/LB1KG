@@ -5,16 +5,19 @@ const LOOKAHEAD = 0.01;     // на какую долю круга смотри�
 const DRIFT_GAIN = 8;
 const MAX_DRIFT = 0.9;
 const DRIFT_SMOOTH = 6;
+const RISE = 0.35;   // секунд, за которые вспышка плавно нарастает перед склейкой
+const FALL = 0.20;
 
 const angleOf = (v) => Math.atan2(v.x, v.z);
 const wrapAngle = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 
 export class AnimationController {
-    constructor(world, button, track, hero) {
+    constructor(world, button, track, hero, lights) {
         this.world = world;
         this.button = button;
         this.track = track;
         this.hero = hero;
+        this.lights = lights;
 
         this.totalDuration = SHOTS.reduce((sum, s) => sum + s.dur, 0);   // длина ролика
         this.speed = track.length / this.totalDuration;                  // за ролик ровно один круг
@@ -90,6 +93,28 @@ export class AnimationController {
         cam.updateProjectionMatrix();
     }
 
+    computeFlash() {
+        const shot = SHOTS[this.shotIndex];
+        const toEnd = shot.dur - this.shotTime;
+        const isLast = this.shotIndex === SHOTS.length - 1;
+
+        // Конец кадра: плавно нарастает к склейке (в последнем кадре не нужно)
+        if (!isLast && toEnd < RISE) {
+            return THREE.MathUtils.smoothstep(1 - toEnd / RISE, 0, 1);
+        }
+        // Начало кадра: быстро и плавно гаснет (в самом первом кадре не нужно)
+        if (this.shotIndex > 0 && this.shotTime < FALL) {
+            return 1 - THREE.MathUtils.smoothstep(this.shotTime / FALL, 0, 1);
+        }
+        return 0;
+    }
+
+    applyFlash(f) {
+        this.lights.setFlash(f);
+        // Пересвет самой картинки, без него вспышка выглядит слабо
+        this.world.renderer.domElement.style.filter = f > 0.001 ? `brightness(${1 + f * 1.2})` : "";
+    }
+
     start() {
         this.isRunning = true;
         this.time = 0;
@@ -106,6 +131,7 @@ export class AnimationController {
         this.world.controls.enabled = true;
         this.button.disabled = false;
         this.button.textContent = "Анимация";
+        this.applyFlash(0);
         this.world.resetCamera();
         this.resetHero();
     }
@@ -125,5 +151,6 @@ export class AnimationController {
             this.startShot(Math.min(this.shotIndex + 1, SHOTS.length - 1));   // жёсткая склейка
         }
         this.updateCamera();
+        this.applyFlash(this.computeFlash());
     }
 }
