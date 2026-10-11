@@ -9,7 +9,10 @@ export class Camera {
         this.zoomStep = 0.2;
 
         this.rotation = {X: 0, Y: 0, Z: 0};
-        this.offset = {X: 0, Y: 0};
+        this.offset = {X: 0, Y: 0, Z: 0};
+        this.minOffsetZ = -500;
+        this.maxOffsetZ = 500;
+        this.NEAR = 1;
 
         this.MIN_DISTANCE = 200;
         this.focalLength = focal;
@@ -56,8 +59,9 @@ export class Camera {
 
         const x = rotated.X + this.offset.X;
         const y = rotated.Y + this.offset.Y;
+        const z = rotated.Z + this.offset.Z;
 
-        const depth = this.distance - rotated.Z;
+        const depth = Math.max(this.distance - z, this.NEAR);
 
         const scale = this.zoom * this.focalLength / depth;
 
@@ -65,7 +69,7 @@ export class Camera {
         return {
             X: (x * scale + this.canvas.width / this.SCALE) / 2,
             Y: (this.canvas.height / this.SCALE - y * scale) / 2,
-            Z: rotated.Z
+            Z: z
         };
     }
 
@@ -91,10 +95,14 @@ export class Camera {
         return true;
     }
 
-    moveBy(dx, dy) {
-        if (dx === 0 && dy === 0) return false;
+    moveBy(dx, dy, dz = 0) {
+        if (dx === 0 && dy === 0 && dz === 0) return false;
         this.offset.X += dx;
         this.offset.Y += dy;
+        this.offset.Z = Math.min(
+            this.maxOffsetZ,
+            Math.max(this.minOffsetZ, this.offset.Z + dz)
+        );
         return true;
     }
 }

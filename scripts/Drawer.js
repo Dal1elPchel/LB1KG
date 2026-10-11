@@ -30,8 +30,8 @@ export class Drawer {
     }
 
 
-    moveBy(dx, dy) {
-        if (this.camera.moveBy(dx, dy)) this.draw();
+    moveBy(dx, dy, dz = 0) {
+        if (this.camera.moveBy(dx, dy, dz)) this.draw();
     }
 
     draw() {

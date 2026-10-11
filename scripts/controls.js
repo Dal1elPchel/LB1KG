@@ -57,11 +57,16 @@ export function setupControls(drawer) {
     });
 
     const moveButtons = [
-        ["moveUp",    0,  1], ["moveDown",  0, -1],
-        ["moveLeft", -1,  0], ["moveRight", 1,  0],
+        ["moveUp",       0,  1,  0], ["moveDown",     0, -1,  0],
+        ["moveLeft",    -1,  0,  0], ["moveRight",    1,  0,  0],
+        ["moveForward",  0,  0,  1], ["moveBackward", 0,  0, -1],
     ];
-    moveButtons.forEach(([id, dx, dy]) => {
-        bindHold(id, (dt) => drawer.moveBy(dx * MOVE_SPEED * dt, dy * MOVE_SPEED * dt));
+    moveButtons.forEach(([id, dx, dy, dz]) => {
+        bindHold(id, (dt) => drawer.moveBy(
+            dx * MOVE_SPEED * dt,
+            dy * MOVE_SPEED * dt,
+            dz * MOVE_SPEED * dt
+        ));
     });
 
     window.addEventListener("mouseup", stopHolding);
