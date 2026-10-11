@@ -7,65 +7,47 @@
 </head>
 <body>
 <div class="app">
-    <canvas id="game" width="800" height="600"></canvas>
-
+    <canvas id="game" width="900" height="700"></canvas>
     <div class="controls">
-
         <div class="control-group">
-            <span class="control-label">Фокальное расстояние</span>
-            <div class="slider-wrap">
-                <input type="range" id="focalLength" class="slider"
-                       min="100" max="3000" step="10" value="600">
-                <span id="focalLengthValue" class="slider-value">600</span>
+            <span class="control-label">Свет X</span>
+            <div class="control-buttons">
+                <button class="ctrl-btn" id="lightXMinus" title="Влево">◀</button>
+                <button class="ctrl-btn" id="lightXPlus" title="Вправо">▶</button>
             </div>
         </div>
 
         <div class="control-group">
-            <span class="control-label">Масштаб</span>
+            <span class="control-label">Свет Y</span>
             <div class="control-buttons">
-                <button id="zoomOut" class="ctrl-btn" title="Уменьшить">−</button>
-                <button id="zoomIn" class="ctrl-btn" title="Увеличить">+</button>
+                <button class="ctrl-btn" id="lightYMinus" title="Вниз">▼</button>
+                <button class="ctrl-btn" id="lightYPlus" title="Вверх">▲</button>
             </div>
         </div>
 
         <div class="control-group">
-            <span class="control-label">Влево / Вправо</span>
+            <span class="control-label">Свет Z</span>
             <div class="control-buttons">
-                <button id="rotateYLeft" class="ctrl-btn" title="Повернуть влево">←</button>
-                <button id="rotateYRight" class="ctrl-btn" title="Повернуть вправо">→</button>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <span class="control-label">Вверх / Вниз</span>
-            <div class="control-buttons">
-                <button id="rotateXUp" class="ctrl-btn" title="Наклонить вверх">↑</button>
-                <button id="rotateXDown" class="ctrl-btn" title="Наклонить вниз">↓</button>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <span class="control-label">Вбок</span>
-            <div class="control-buttons">
-                <button id="rotateZLeft" class="ctrl-btn" title="Наклонить в один бок">↺</button>
-                <button id="rotateZRight" class="ctrl-btn" title="Наклонить в другой бок">↻</button>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <span class="control-label">Перемещение</span>
-            <div class="control-buttons">
-                <button id="moveUp" class="ctrl-btn" title="Переместить вверх">↑</button>
-                <button id="moveDown" class="ctrl-btn" title="Переместить вниз">↓</button>
-                <button id="moveLeft" class="ctrl-btn" title="Переместить влево">←</button>
-                <button id="moveRight" class="ctrl-btn" title="Переместить вправо">→</button>
-                <button id="moveForward" class="ctrl-btn" title="Приблизить (по Z)">⤒</button>
-                <button id="moveBackward" class="ctrl-btn" title="Отдалить (по Z)">⤓</button>
+                <button class="ctrl-btn" id="lightZMinus" title="Дальше от нас">−</button>
+                <button class="ctrl-btn" id="lightZPlus" title="Ближе к нам">+</button>
             </div>
         </div>
     </div>
+
+    <div class="hints">
+        <div class="hint"><span class="hint-key">ЛКМ + движение</span> вращение сцены</div>
+        <div class="hint"><span class="hint-key">Колёсико</span> масштаб</div>
+        <div class="hint"><span class="hint-key">ПКМ + движение</span> сдвиг сцены</div>
+        <div class="hint"><span class="hint-key">Зажать кнопку</span> двигать солнце (жёлтый шар)</div>
+    </div>
 </div>
 
+<script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }}
+</script>
 <script src="index.js" defer type="module"></script>
 </body>
 </html>

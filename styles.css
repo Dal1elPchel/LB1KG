@@ -146,3 +146,33 @@ canvas {
     text-align: right;
     font-variant-numeric: tabular-nums;
 }
+
+.ctrl-btn {
+    user-select: none;
+    touch-action: none;
+}
+
+.hints {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 20px;
+    color: #9a9cab;
+    font-size: 13px;
+}
+
+.hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hint-key {
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #2f3140;
+    border: 1px solid #454858;
+    color: #e8e8ef;
+    font-weight: 600;
+    font-size: 12px;
+}

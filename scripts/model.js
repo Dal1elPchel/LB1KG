@@ -1,45 +1,7 @@
 const OUTLINE_COUNT = 33;
-const DEPTH = 30;
-const FOCAL = 600;
+export const DEPTH = 30;
 
-const boneNumbers = [
-    // голова
-    [33, 1], [1, 2], [2, 3], [3, 4], [4, 5],
-    [29, 30], [30, 31], [31, 32], [32, 33],
-    [5, 6], [29, 28], [29, 5],
 
-    // "глаза" внутри головы
-    [34, 35], [35, 36], [36, 34],
-    [37, 39], [39, 38], [38, 37],
-
-    // верх туловища
-    [27, 28], [28, 6], [6, 7],
-
-    // левое плечо/рука
-    [27, 24], [24, 23], [23, 18],
-    [24, 25], [25, 26], [26, 27],
-
-    // правое плечо/рука
-    [7, 10], [10, 11], [11, 16],
-    [10, 9], [9, 8], [8, 7],
-
-    // бёдра/таз
-    [18, 17], [17, 16],
-
-    // левая нога
-    [23, 22], [18, 19], [22, 19], [22, 21], [19, 20], [21, 20],
-
-    // правая нога
-    [16, 15], [11, 12], [15, 12], [15, 14], [12, 13], [14, 13],
-
-    // "нашивка" на груди
-    [48, 42], [49, 52], [50, 53],
-    [42, 52], [52, 53], [53, 43],
-    [40, 54], [54, 55], [55, 41],
-    [44, 40], [45, 54], [46, 55],
-    [40, 44], [51, 43], [43, 41],
-    [42, 40], [41, 47],
-];
 
 const pointsUnder = [
     {X: 40, Y: 144},   // 1
@@ -99,29 +61,22 @@ const pointsUnder = [
     {X: 8, Y: -40},    // 55
 ];
 
-export function buildModel() {
-    const front = pointsUnder.map(p => ({...p, Z: DEPTH}));
-    const back = front.slice(0, OUTLINE_COUNT).map(p => ({...p, Z: -DEPTH}));
-    const offset = front.length;
+export const outline = pointsUnder.slice(0, OUTLINE_COUNT);
 
-    const bonesUnder = boneNumbers.map(([a, b]) => [a - 1, b - 1]);
-    const bonesBack = bonesUnder
-        .filter(([a, b]) => a < OUTLINE_COUNT && b < OUTLINE_COUNT)
-        .map(([a, b]) => [a + offset, b + offset]);
-    const bonesBridge = back.map((_, i) => [i, i + offset]);
+export const eyes = [
+    [pointsUnder[33], pointsUnder[34], pointsUnder[35]],
+    [pointsUnder[36], pointsUnder[37], pointsUnder[38]],
+];
 
-    const outline = Array.from({length: OUTLINE_COUNT}, (_, i) => i);
-    const frontFace = outline;
-    const backFace = outline.map(i => i + offset);
-    const sideFaces = outline.map(i => {
-        const j = (i + 1) % OUTLINE_COUNT;
-        return [i, j, j + offset, i + offset];
-    });
+export const patchPoints = pointsUnder.slice(39);
 
-    return {
-        points: [...front, ...back],
-        bones: [...bonesUnder, ...bonesBack, ...bonesBridge],
-        faces: [frontFace, backFace, ...sideFaces],
-        focal: FOCAL,
-    };
-}
+
+const patchBoneNumbers = [
+    [48, 42], [49, 52], [50, 53],
+    [42, 52], [52, 53], [53, 43],
+    [40, 54], [54, 55], [55, 41],
+    [44, 40], [45, 54], [46, 55],
+    [40, 44], [51, 43], [43, 41],
+    [42, 40], [41, 47],
+];
+export const patchBones = patchBoneNumbers.map(([a, b]) => [a - 40, b - 40]);
