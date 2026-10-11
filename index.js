@@ -95,6 +95,40 @@ window.addEventListener("pointerup", stopMove);
 window.addEventListener("pointercancel", stopMove);
 window.addEventListener("blur", stopMove);
 
+
+// ---------- Режим анимации (пока пустой каркас) ----------
+const ANIM_DURATION = 4;             // длина ролика в секундах (потом заменим на настоящую)
+const DEFAULT_CAM = {x: 150, y: 100, z: 600};
+
+const animBtn = document.getElementById("animBtn");
+let animMode = false;                // идёт ли ролик сейчас
+let animTime = 0;                    // сколько секунд прошло с начала ролика
+
+function startAnimation() {
+    animMode = true;
+    animTime = 0;
+    controls.enabled = false;        // мышь не управляет камерой
+    animBtn.disabled = true;         // повторно запустить нельзя
+    animBtn.textContent = "Идёт...";
+}
+
+function stopAnimation() {
+    animMode = false;
+    controls.enabled = true;         // мышь снова работает
+    animBtn.disabled = false;
+    animBtn.textContent = "Анимация";
+
+    camera.position.set(DEFAULT_CAM.x, DEFAULT_CAM.y, DEFAULT_CAM.z);   // камера в обычное положение
+    controls.target.set(0, 0, 0);    // и смотрит на центр
+    controls.update();
+}
+
+function updateAnimation(dt) {
+    animTime += dt;
+    if (animTime >= ANIM_DURATION) stopAnimation();
+}
+
+animBtn.addEventListener("click", startAnimation);
 const clock = new THREE.Clock();
 
 function animate() {
@@ -109,7 +143,8 @@ function animate() {
         sunMarker.position.copy(sun.position);
     }
 
-    controls.update();
+    if (animMode) updateAnimation(dt);
+    else controls.update();
     renderer.render(scene, camera);
 }
 animate();
