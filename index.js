@@ -65,16 +65,15 @@ scene.add(sun);
 
 const sunMarker = new THREE.Mesh(
     new THREE.SphereGeometry(8, 16, 16),
-    new THREE.MeshBasicMaterial({color: 0xffe600})   // Basic = не зависит от света, всегда яркий
+    new THREE.MeshBasicMaterial({color: 0xffe600})
 );
 sunMarker.position.copy(sun.position);
 scene.add(sunMarker);
 
-// ---------- Движение солнца кнопками ----------
-const LIGHT_SPEED = 200;   // единиц в секунду
-const LIGHT_LIMIT = 800;   // дальше этого солнце не уйдёт
+const LIGHT_SPEED = 200;
+const LIGHT_LIMIT = 800;
 
-let activeMove = null;     // что сейчас зажато: {axis: "x", dir: 1} или null
+let activeMove = null;
 
 function bindLightButton(id, axis, dir) {
     document.getElementById(id).addEventListener("pointerdown", (e) => {
@@ -100,7 +99,7 @@ const clock = new THREE.Clock();
 function animate() {
     requestAnimationFrame(animate);
 
-    const dt = Math.min(clock.getDelta(), 0.1);   // секунд с прошлого кадра
+    const dt = Math.min(clock.getDelta(), 0.1);
 
     if (activeMove) {
         const {axis, dir} = activeMove;

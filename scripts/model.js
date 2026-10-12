@@ -1,8 +1,6 @@
 const OUTLINE_COUNT = 33;
 export const DEPTH = 30;
 
-
-
 const pointsUnder = [
     {X: 40, Y: 144},   // 1
     {X: 64, Y: 120},   // 2
@@ -69,7 +67,6 @@ export const eyes = [
 ];
 
 export const patchPoints = pointsUnder.slice(39);
-
 
 const patchBoneNumbers = [
     [48, 42], [49, 52], [50, 53],
