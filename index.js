@@ -20,9 +20,29 @@ const shape = new THREE.Shape(outline.map(p => new THREE.Vector2(p.X, p.Y)));
 const geometry = new THREE.ExtrudeGeometry(shape, {depth: DEPTH * 2, bevelEnabled: false});
 geometry.translate(0, 0, -DEPTH);
 
-const material = new THREE.MeshLambertMaterial({color: 0xa259ff});
+const loader = new THREE.TextureLoader();
+const maxAniso = renderer.capabilities.getMaxAnisotropy();
 
-scene.add(new THREE.Mesh(geometry, material));
+function loadTex(url, tileSize) {
+    const t = loader.load(url);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(1 / tileSize, 1 / tileSize);
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.anisotropy = maxAniso;
+    return t;
+}
+
+function makeMaterial({color = 0xffffff, texture = null} = {}) {
+    return new THREE.MeshLambertMaterial({color, map: texture});
+}
+
+const mesh = new THREE.Mesh(geometry, [
+    makeMaterial({color: 0xa259ff, texture: loadTex("textures/fabric.jpg", 64)}),
+    makeMaterial({color: 0xa259ff, texture: loadTex("textures/fabric.jpg", 32)}),
+]);
+
+scene.add(mesh);
+
 const eyeMaterial = new THREE.MeshLambertMaterial({color: 0xc6ff3d, side: THREE.DoubleSide});
 
 for (const triangle of eyes) {
@@ -93,6 +113,18 @@ const stopMove = () => { activeMove = null; };
 window.addEventListener("pointerup", stopMove);
 window.addEventListener("pointercancel", stopMove);
 window.addEventListener("blur", stopMove);
+
+document.getElementById('fabricTexture').addEventListener('click',
+    () => {setTexture('fabric')});
+
+document.getElementById('metalTexture').addEventListener('click',
+    () => {setTexture('metal')});
+
+const setTexture = (texture) => {
+    const mat = mesh.material[0];
+    mat.map = loadTex(`textures/${texture}.jpg`, 64);
+    mat.needsUpdate = true;
+}
 
 const clock = new THREE.Clock();
 
