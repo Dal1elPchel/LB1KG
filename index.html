@@ -9,45 +9,16 @@
 <div class="app">
     <canvas id="game" width="900" height="700"></canvas>
     <div class="controls">
-        <div class="control-group">
-            <span class="control-label">Свет X</span>
-            <div class="control-buttons">
-                <button class="ctrl-btn" id="lightXMinus" title="Влево">◀</button>
-                <button class="ctrl-btn" id="lightXPlus" title="Вправо">▶</button>
-            </div>
+        <div class="control-buttons">
+            <button class="ctrl-btn" id="start">Start</button>
+            <button class="ctrl-btn" id="stop">Stop</button>
         </div>
-
-        <div class="control-group">
-            <span class="control-label">Свет Y</span>
-            <div class="control-buttons">
-                <button class="ctrl-btn" id="lightYMinus" title="Вниз">▼</button>
-                <button class="ctrl-btn" id="lightYPlus" title="Вверх">▲</button>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <span class="control-label">Свет Z</span>
-            <div class="control-buttons">
-                <button class="ctrl-btn" id="lightZMinus" title="Дальше от нас">−</button>
-                <button class="ctrl-btn" id="lightZPlus" title="Ближе к нам">+</button>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <span class="control-label">Текстуры</span>
-            <div class="control-buttons">
-                <button class="ctrl-btn" id="fabricTexture" style="width:auto; padding:0 16px; font-size:14px;" title="ворс">ворс</button>
-                <button class="ctrl-btn" id="metalTexture" style="width:auto; padding:0 16px; font-size:14px;" title="метал">метал</button>
-            </div>
-        </div>
-
+        <div class="counter">Счет: <span id="counter"></span></div>
     </div>
 
-    <div class="hints">
-        <div class="hint"><span class="hint-key">ЛКМ + движение</span> вращение сцены</div>
-        <div class="hint"><span class="hint-key">Колёсико</span> масштаб</div>
-        <div class="hint"><span class="hint-key">ПКМ + движение</span> сдвиг сцены</div>
-        <div class="hint"><span class="hint-key">Зажать кнопку</span> двигать солнце (жёлтый шар)</div>
+    <div class="modal">
+        <div class="modal_text">Проигрыш! Ваш счет: <span id="counter_modal"></span></div>
+        <button class="modal_close">&#10005;</button>
     </div>
 </div>
 
