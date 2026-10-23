@@ -67,4 +67,15 @@ export function setupControls(drawer) {
     window.addEventListener("mouseup", stopHolding);
     window.addEventListener("touchend", stopHolding);
     window.addEventListener("touchcancel", stopHolding);
+
+    const depthLabel = document.getElementById("depthValue");
+
+    function changeDepth(delta) {
+        if (drawer.setDepth(drawer.depth + delta)) {
+            depthLabel.textContent = drawer.depth;
+        }
+    }
+
+    document.getElementById("depthUp").addEventListener("click", () => changeDepth(1));
+    document.getElementById("depthDown").addEventListener("click", () => changeDepth(-1));
 }

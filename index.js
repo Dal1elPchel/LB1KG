@@ -10,8 +10,8 @@ const SCALE = 3;
 ctx.scale(SCALE, SCALE);
 
 
-const {points, bones} = buildModel();
-const drawer = new Drawer(canvas, ctx, SCALE, points, bones);
+const model = buildModel();
+const drawer = new Drawer(canvas, ctx, SCALE, model);
 
 drawer.draw();
 setupControls(drawer);
